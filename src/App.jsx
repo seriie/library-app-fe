@@ -1,0 +1,48 @@
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Login from "./pages/auth/Login";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./routes/protected.route";
+import PublicRoute from "./routes/public.route";
+import AdminRoute from "./routes/admin.route";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+
+function App() {
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+    </>
+  );
+}
+
+export default App;
