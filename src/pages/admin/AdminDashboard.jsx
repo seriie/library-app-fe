@@ -42,7 +42,6 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* Menu */}
         <nav className="flex-1 py-4 space-y-1">
           {tabs.map((tab) => (
             <button
@@ -62,29 +61,26 @@ export default function AdminDashboard() {
         </nav>
       </aside>
 
-      {/* MAIN CONTENT */}
       <main className="flex-1 p-8">
-        {/* Header */}
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-slate-800 capitalize">
             {activeTab}
           </h2>
           <p className="text-slate-500 text-sm">
-            Manage {activeTab} section
+            Manage {activeTab} section bimbimbam
           </p>
         </div>
 
-        {/* Content Card */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
           {activeTab === "general" && (
             <p className="text-slate-700">
-              📊 General overview & statistics nanti di sini.
+              📊 General overview & statistics blabalblablablalba.
             </p>
           )}
 
           {activeTab === "loans" && (
             <p className="text-slate-700">
-              📄 Data peminjaman buku (loans).
+              📄 Data peminjaman buku (loans) blehblehbleh.
             </p>
           )}
 
@@ -96,7 +92,13 @@ export default function AdminDashboard() {
 
           {activeTab === "users" && (
             <p className="text-slate-700">
-              👥 Manajemen user (kick, role, suspend).
+              👥 Manajemen user blaababala.
+            </p>
+          )}
+
+          {activeTab === "logs" && (
+            <p className="text-slate-700">
+              📄 Activity logs blaababala.
             </p>
           )}
         </div>

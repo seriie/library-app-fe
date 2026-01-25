@@ -20,13 +20,11 @@ export default function Dashboard() {
   const { user } = useContext(ProfileContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
-  // Data State
   const [books, setBooks] = useState([]);
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("LIBRARY");
 
-  // Alert State
   const [alert, setAlert] = useState({ open: false, message: "", type: "success" });
   const [confirmState, setConfirmState] = useState({ open: false, bookId: null });
 
@@ -55,7 +53,6 @@ export default function Dashboard() {
   }, [user, fetchData]);
 
   const handleBorrow = async (bookId) => {
-    // Deprecated
   };
   
   const onBorrow = (bookId) => {
@@ -63,7 +60,7 @@ export default function Dashboard() {
   };
 
   const processBorrow = async () => {
-    setConfirmState({ open: false, bookId: null }); // Close confirm dialog
+    setConfirmState({ open: false, bookId: null });
 
     try {
       await axios.post(`${URL}/api/loans`, {
@@ -102,7 +99,6 @@ export default function Dashboard() {
     );
   }
 
-  // Derived Stats
   const myLoans = loans.filter(loan => loan.userId === user.id);
   const activeLoans = myLoans.filter(loan => loan.status === 'borrowed').length;
   const returnedLoans = myLoans.filter(loan => loan.status === 'returned').length;
@@ -155,7 +151,7 @@ export default function Dashboard() {
                   key={index}
                   onClick={() => {
                     setActiveTab(item.id);
-                    setSidebarOpen(false); // Close mobile sidebar on click
+                    setSidebarOpen(false);
                   }}
                   className={`flex items-center w-full px-6 py-4 rounded-xl transition-all duration-200 group ${
                     isActive
