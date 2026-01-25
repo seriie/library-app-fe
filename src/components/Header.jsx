@@ -11,15 +11,15 @@ export default function Header() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-50 bg-indigo-950/90 backdrop-blur border-b border-indigo-800">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+    <header className="sticky top-0 z-100 bg-indigo-950/90 backdrop-blur border-b border-indigo-800">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-6">
         <div
           onClick={() => navigate("/dashboard")}
           className="flex items-center gap-3 cursor-pointer select-none"
         >
           <GiOpenBook className="text-yellow-400 text-2xl" />
           <h1 className="text-white font-semibold tracking-wide">
-            Book<span className="text-yellow-400">App</span>
+            Atlas<span className="text-yellow-400">App</span>
           </h1>
         </div>
 
