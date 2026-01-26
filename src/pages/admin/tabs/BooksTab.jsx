@@ -88,7 +88,6 @@ export default function BooksTab() {
         </button>
       </div>
 
-      {/* Table Card */}
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 text-slate-600">
@@ -154,7 +153,6 @@ export default function BooksTab() {
         </table>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border border-slate-200">

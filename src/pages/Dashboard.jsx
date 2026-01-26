@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { ProfileContext } from "../contexts/profile-context/ProfileContext";
+import { RoleContext } from "../contexts/role-context/RoleContext";
 import axios from "axios";
 import {
   FaUser,
@@ -18,6 +19,7 @@ import Alert from "../components/Alert";
 
 export default function Dashboard() {
   const { user } = useContext(ProfileContext);
+  const { isAdmin } = useContext(RoleContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [books, setBooks] = useState([]);
@@ -247,10 +249,10 @@ export default function Dashboard() {
                 className="pl-12 pr-4 py-3 bg-white border-2 border-transparent focus:border-gray-900 rounded-xl text-sm font-medium w-64 transition-all shadow-sm outline-none"
               />
             </div>
-            <button className="relative p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-200 text-gray-600 hover:text-gray-900">
+            {/* <button className="relative p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-200 text-gray-600 hover:text-gray-900">
               <FaBell className="text-lg" />
               <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border border-white"></span>
-            </button>
+            </button> */}
           </div>
         </header>
 
@@ -304,60 +306,62 @@ export default function Dashboard() {
           {activeTab === "LIBRARY" && (
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
               {/* Book Collection (2/3 width) */}
-              <div className="xl:col-span-2">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 uppercase tracking-tight">
-                    Available Collection
-                  </h3>
-                </div>
+              {!isAdmin && (
+                <div className="xl:col-span-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-bold text-gray-900 uppercase tracking-tight">
+                      Available Collection
+                    </h3>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {books.map((book) => (
-                    <div
-                      key={book.id}
-                      className="bg-white rounded-3xl p-6 border border-gray-100 shadow-lg hover:shadow-xl transition-shadow flex flex-col justify-between group"
-                    >
-                      <div>
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="h-12 w-12 bg-gray-900 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-md">
-                            {book.title.charAt(0)}
-                          </div>
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-bold ${
-                              book.stock > 0
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
-                          >
-                            {book.stock > 0 ? "IN STOCK" : "OUT OF STOCK"}
-                          </span>
-                        </div>
-                        <h4 className="font-bold text-lg text-gray-900 mb-1 leading-tight group-hover:text-indigo-600 transition-colors">
-                          {book.title}
-                        </h4>
-                        <p className="text-sm text-gray-500 font-medium mb-4">
-                          {book.author}
-                        </p>
-                        <p className="text-xs text-gray-400 line-clamp-2 mb-4">
-                          {book.description || "No description available."}
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => onBorrow(book.id)}
-                        disabled={book.stock <= 0}
-                        className={`w-full cursor-pointer py-3 rounded-xl font-bold text-sm transition-all ${
-                          book.stock > 0
-                            ? "bg-gray-900 text-white hover:bg-gray-800 shadow-lg hover:shadow-xl active:transform active:scale-95"
-                            : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        }`}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {books.map((book) => (
+                      <div
+                        key={book.id}
+                        className="bg-white rounded-3xl p-6 border border-gray-100 shadow-lg hover:shadow-xl transition-shadow flex flex-col justify-between group"
                       >
-                        {book.stock > 0 ? "BORROW NOW" : "UNAVAILABLE"}
-                      </button>
-                    </div>
-                  ))}
+                        <div>
+                          <div className="flex justify-between items-start mb-4">
+                            <div className="h-12 w-12 bg-gray-900 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-md">
+                              {book.title.charAt(0)}
+                            </div>
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                book.stock > 0
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {book.stock > 0 ? "IN STOCK" : "OUT OF STOCK"}
+                            </span>
+                          </div>
+                          <h4 className="font-bold text-lg text-gray-900 mb-1 leading-tight group-hover:text-indigo-600 transition-colors">
+                            {book.title}
+                          </h4>
+                          <p className="text-sm text-gray-500 font-medium mb-4">
+                            {book.author}
+                          </p>
+                          <p className="text-xs text-gray-400 line-clamp-2 mb-4">
+                            {book.description || "No description available."}
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={() => onBorrow(book.id)}
+                          disabled={book.stock <= 0}
+                          className={`w-full cursor-pointer py-3 rounded-xl font-bold text-sm transition-all ${
+                            book.stock > 0
+                              ? "bg-gray-900 text-white hover:bg-gray-800 shadow-lg hover:shadow-xl active:transform active:scale-95"
+                              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                          }`}
+                        >
+                          {book.stock > 0 ? "BORROW NOW" : "UNAVAILABLE"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* My Loans Sidebar (1/3 width) */}
               <div className="xl:col-span-1">
@@ -400,7 +404,6 @@ export default function Dashboard() {
                     ))
                   )}
                 </div>
-
                 {/* Quick Info Card */}
                 <div className="bg-gray-900 rounded-3xl p-6 text-white shadow-lg mt-8 relative overflow-hidden">
                   <div className="relative z-10">

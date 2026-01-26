@@ -10,6 +10,7 @@ import { FaRegFileLines } from "react-icons/fa6";
 
 import General from "./tabs/General";
 import BooksTab from "./tabs/BooksTab";
+import UserManagement from "./tabs/UsersManagement";
 
 const tabs = [
   { key: "general", label: "General", icon: <FiHome /> },
@@ -93,7 +94,8 @@ export default function AdminDashboard() {
 
           {activeTab === "users" && (
             <p className="text-slate-700">
-              👥 Manajemen user blaababala.
+              
+              <UserManagement />
             </p>
           )}
 
