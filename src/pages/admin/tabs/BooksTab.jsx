@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from 'axios'
 
 export default function BooksTab() {
   const [books, setBooks] = useState([]);
@@ -8,7 +9,7 @@ export default function BooksTab() {
     title: "",
     author: "",
     description: "",
-    stock: "",
+    stock: 0,
     status: "available",
   });
 
@@ -25,6 +26,11 @@ export default function BooksTab() {
       setLoading(false);
     }
   };
+
+  const handleBookDelete = async (id) => {
+    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/books/${id}`);
+    fetchBooks();
+  }
 
   useEffect(() => {
     fetchBooks();
@@ -50,11 +56,11 @@ export default function BooksTab() {
           title: "",
           author: "",
           description: "",
-          stock: "",
+          stock: 0,
           status: "available",
         });
       } else {
-        console.error("Gagal tambah buku:", data);
+        console.error("Failed to add book:", data);
       }
     } catch (err) {
       console.error(err);
@@ -137,7 +143,7 @@ export default function BooksTab() {
                     <button className="rounded-md cursor-pointer px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 transition">
                       Edit
                     </button>
-                    <button className="rounded-md cursor-pointer px-3 py-1 text-xs font-medium text-red-600 hover:bg-red-50 transition">
+                    <button onClick={() => handleBookDelete(book.id)} className="rounded-md cursor-pointer px-3 py-1 text-xs font-medium text-red-600 hover:bg-red-50 transition">
                       Delete
                     </button>
                   </td>

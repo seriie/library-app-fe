@@ -96,7 +96,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoggingIn}
-            className={`w-full p-2 rounded text-white transition ${
+            className={`cursor-pointer w-full p-2 rounded text-white transition ${
               isLoggingIn
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-gray-800 hover:bg-gray-600"

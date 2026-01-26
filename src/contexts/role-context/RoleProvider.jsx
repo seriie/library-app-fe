@@ -5,7 +5,7 @@ export default function RoleProvider({ children }) {
   const { user, loading } = useProfile();
 
   if (loading) {
-    return <div className="p-6">Loading role dulu bestie… 🌀</div>;
+    return <div className="p-6">Loading... 🌀</div>;
   }
 
   const role = user?.role || "guest";

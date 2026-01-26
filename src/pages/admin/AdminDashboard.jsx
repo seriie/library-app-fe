@@ -8,6 +8,7 @@ import {
 } from "react-icons/fi";
 import { FaRegFileLines } from "react-icons/fa6";
 
+import General from "./tabs/General";
 import BooksTab from "./tabs/BooksTab";
 
 const tabs = [
@@ -74,7 +75,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
           {activeTab === "general" && (
             <p className="text-slate-700">
-              📊 General overview & statistics blabalblablablalba.
+              <General />
             </p>
           )}
 
