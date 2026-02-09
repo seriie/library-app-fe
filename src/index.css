@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@layer utilities {
+  @keyframes popup {
+    0% {
+      transform: translateY(100%) scale(0.5);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-popup {
+    animation: popup 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+}
