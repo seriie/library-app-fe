@@ -1,22 +1,20 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { ProfileContext } from "../contexts/profile-context/ProfileContext";
-import { RoleContext } from "../contexts/role-context/RoleContext";
 import axios from "axios";
-import {
-  FaUser,
-  FaBook,
-  FaCog,
-  FaBars,
-  FaSearch,
-  FaBookmark,
-  FaCheckCircle,
-} from "react-icons/fa";
+import { FaBars, FaSearch, FaBookmark } from "react-icons/fa";
+
+// Components
 import Alert from "../components/Alert";
-import Aside from "../components/Aside";
+import Aside from "../components/pages/dashboard/Aside";
+import Stats from "../components/pages/dashboard/Stats";
+import Loading from "../components/Loading";
+
+// Tabs
+import Library from "../components/pages/dashboard/tabs/Library";
+import Profile from "../components/pages/dashboard/tabs/Profile";
 
 export default function Dashboard() {
   const { user } = useContext(ProfileContext);
-  const { isAdmin } = useContext(RoleContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [books, setBooks] = useState([]);
@@ -59,10 +57,6 @@ export default function Dashboard() {
     }
   }, [user, fetchData]);
 
-  const onBorrow = (bookId) => {
-    setConfirmState({ open: true, bookId });
-  };
-
   const processBorrow = async () => {
     setConfirmState({ open: false, bookId: null });
 
@@ -87,27 +81,16 @@ export default function Dashboard() {
     }
   };
 
-  const handleLogout = async (id) => {
-    localStorage.removeItem("token");
-    await axios.delete(
-      `${import.meta.env.VITE_BACKEND_URL}/api/sessions/${id}`
-    );
-    console.error(e);
-    window.location.reload();
-  };
-
-  if (!user || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-900">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-16 w-16 border-4 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
-          <p className="font-bold text-lg tracking-wider">
-            ACCESSING ARCHIVES...
-          </p>
-        </div>
-      </div>
-    );
-  }
+    // return (
+    //   <div className="absolute inset-0 overflow-hidden justify-center flex items-center z-200 bg-gray-100">
+    //     <div className="flex flex-col items-center gap-4">
+    //       <div className="h-16 w-16 border-4 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+    //       <p className="font-bold text-lg tracking-wider">
+    //         ACCESSING ARCHIVES...
+    //       </p>
+    //     </div>
+    //   </div>
+    // );
 
   const myLoans = loans.filter((loan) => loan.userId === user.id);
   const activeLoans = myLoans.filter(
@@ -118,15 +101,8 @@ export default function Dashboard() {
   ).length;
   const totalBooks = books.length;
 
-  const menuItems = [
-    { icon: FaBook, label: "LIBRARY", id: "LIBRARY" },
-    { icon: FaBookmark, label: "MY LOANS", id: "MY LOANS" },
-    { icon: FaUser, label: "PROFILE", id: "PROFILE" },
-    { icon: FaCog, label: "SETTINGS", id: "SETTINGS" },
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-100 flex font-sans text-gray-900">
+    <>
       {/* Toast Alert */}
       <Alert
         open={alert.open}
@@ -147,8 +123,6 @@ export default function Dashboard() {
       {/* Sidebar */}
       <Aside
         user={user}
-        handleLogout={handleLogout}
-        menuItems={menuItems}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         sidebarOpen={sidebarOpen}
@@ -202,12 +176,12 @@ export default function Dashboard() {
 
         {/* Content */}
         <main className="flex-1 px-8 lg:px-12 py-4 overflow-y-auto">
-          {/* Hero Banner */}
+          {/* Banner */}
           <div className="w-full bg-gray-900 rounded-3xl p-10 text-white mb-10 relative overflow-hidden shadow-2xl shadow-gray-900/20 group">
             <div className="relative z-10 max-w-2xl">
               <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight leading-tight">
                 DIGITAL <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-gray-200 to-gray-500">
                   ARCHIVE
                 </span>
               </h1>
@@ -220,146 +194,14 @@ export default function Dashboard() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid animate-popup duration-500 grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1">
-              <p className="text-gray-500 text-xs font-bold tracking-widest mb-2">
-                TOTAL BOOKS
-              </p>
-              <h3 className="text-4xl font-black text-gray-900">
-                {totalBooks}
-              </h3>
-            </div>
-            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1">
-              <p className="text-gray-500 text-xs font-bold tracking-widest mb-2">
-                ACTIVE LOANS
-              </p>
-              <h3 className="text-4xl font-black text-gray-900">
-                {activeLoans}
-              </h3>
-            </div>
-            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1">
-              <p className="text-gray-500 text-xs font-bold tracking-widest mb-2">
-                RETURNED
-              </p>
-              <h3 className="text-4xl font-black text-gray-900">
-                {returnedLoans}
-              </h3>
-            </div>
-          </div>
+          <Stats activeLoans={activeLoans} returnedLoans={returnedLoans} totalBooks={totalBooks} />
 
           {activeTab === "LIBRARY" && (
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-              {!isAdmin && (
-                <div className="xl:col-span-2">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-gray-900 uppercase tracking-tight">
-                      Available Collection
-                    </h3>
-                  </div>
+            <Library books={books} myLoans={myLoans} setConfirmState={setConfirmState} />
+          )}
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {books.map((book) => (
-                      <div
-                        key={book.id}
-                        className="bg-white rounded-3xl p-6 border border-gray-100 shadow-lg hover:shadow-xl transition-shadow flex flex-col justify-between group"
-                      >
-                        <div>
-                          <div className="flex justify-between items-start mb-4">
-                            <div className="h-12 w-12 bg-gray-900 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-md">
-                              {book.title.charAt(0)}
-                            </div>
-                            <span
-                              className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                book.stock > 0
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-red-100 text-red-700"
-                              }`}
-                            >
-                              {book.stock > 0 ? "IN STOCK" : "OUT OF STOCK"}
-                            </span>
-                          </div>
-                          <h4 className="font-bold text-lg text-gray-900 mb-1 leading-tight group-hover:text-indigo-600 transition-colors">
-                            {book.title}
-                          </h4>
-                          <p className="text-sm text-gray-500 font-medium mb-4">
-                            {book.author}
-                          </p>
-                          <p className="text-xs text-gray-400 line-clamp-2 mb-4">
-                            {book.description || "No description available."}
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={() => onBorrow(book.id)}
-                          disabled={book.stock <= 0}
-                          className={`w-full cursor-pointer py-3 rounded-xl font-bold text-sm transition-all ${
-                            book.stock > 0
-                              ? "bg-gray-900 text-white hover:bg-gray-800 shadow-lg hover:shadow-xl active:transform active:scale-95"
-                              : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                          }`}
-                        >
-                          {book.stock > 0 ? "BORROW NOW" : "UNAVAILABLE"}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* My Loans Sidebar (1/3 width) */}
-              <div className="xl:col-span-1">
-                <h3 className="text-xl font-bold text-gray-900 uppercase tracking-tight mb-6">
-                  My Recent Activity
-                </h3>
-                <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-lg space-y-4">
-                  {myLoans.length === 0 ? (
-                    <p className="text-gray-500 text-center py-8">
-                      No loan history found.
-                    </p>
-                  ) : (
-                    myLoans.slice(0, 5).map((loan) => (
-                      <div
-                        key={loan.id}
-                        className="flex items-center p-4 rounded-2xl bg-gray-50 border border-gray-100"
-                      >
-                        <div
-                          className={`h-10 w-10 rounded-full flex items-center justify-center text-white mr-4 ${
-                            loan.status === "borrowed"
-                              ? "bg-indigo-600"
-                              : "bg-gray-400"
-                          }`}
-                        >
-                          {loan.status === "borrowed" ? (
-                            <FaBookmark />
-                          ) : (
-                            <FaCheckCircle />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-bold text-gray-900 text-sm truncate">
-                            {loan.book?.title || "Unknown Book"}
-                          </p>
-                          <p className="text-xs text-gray-500 font-medium uppercase">
-                            {loan.status}
-                          </p>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-                {/* Quick Info Card */}
-                <div className="bg-gray-900 rounded-3xl p-6 text-white shadow-lg mt-8 relative overflow-hidden">
-                  <div className="relative z-10">
-                    <h4 className="font-bold text-lg mb-2">LIBRARY RULES</h4>
-                    <ul className="text-sm text-gray-400 space-y-2 list-disc pl-4">
-                      <li>No stealing books.</li>
-                      <li>No late returning books.</li>
-                      <li>No damaging books.</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {activeTab === "PROFILE" && (
+            <Profile />
           )}
 
           {activeTab === "MY LOANS" && (
@@ -444,6 +286,6 @@ export default function Dashboard() {
           )}
         </main>
       </div>
-    </div>
+    </>
   );
 }

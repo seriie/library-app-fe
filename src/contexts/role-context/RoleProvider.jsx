@@ -10,8 +10,8 @@ export default function RoleProvider({ children }) {
 
   const role = user?.role || "guest";
 
-  const isAdmin = role === "admin";
   const isOwner = role === "owner";
+  const isAdmin = role === "admin";
   const isMember = role === "member";
 
   return (

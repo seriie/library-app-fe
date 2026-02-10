@@ -37,4 +37,3 @@ export default function ProfileProvider({ children }) {
     </ProfileContext.Provider>
   );
 }
-

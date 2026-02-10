@@ -25,7 +25,7 @@ export default function AdminDashboard() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-slate-100">
+    <>
       <aside
         className={`bg-indigo-950 text-indigo-100 transition-all duration-300 ease-in-out
         ${collapsed ? "w-16" : "w-64"} flex flex-col`}
@@ -106,6 +106,6 @@ export default function AdminDashboard() {
           )}
         </div>
       </main>
-    </div>
+    </>
   );
 }

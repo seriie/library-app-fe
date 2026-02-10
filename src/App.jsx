@@ -2,10 +2,14 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
+import Layout from "./components/layout/Layout";
+
 import Header from "./components/Header";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/Dashboard";
+
 import ProtectedRoute from "./routes/protected.route";
 import PublicRoute from "./routes/public.route";
 import AdminRoute from "./routes/admin.route";
@@ -47,7 +51,7 @@ function App() {
           path="/admin"
           element={
             <AdminRoute>
-              <AdminDashboard />
+              <Layout childern={<AdminDashboard />} />
             </AdminRoute>
           }
         />
@@ -56,7 +60,7 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Layout childern={<Dashboard />} />
             </ProtectedRoute>
           }
         />
