@@ -1,3 +1,4 @@
+import axios from "axios";
 import { FaSignOutAlt, FaBook, FaBookmark, FaUser, FaCog } from "react-icons/fa";
 
 export default function Aside({ user, activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) {
@@ -9,22 +10,26 @@ export default function Aside({ user, activeTab, setActiveTab, sidebarOpen, setS
     ];
 
     const handleLogout = async (id) => {
-        localStorage.removeItem("token");
         try {
             await axios.delete(
-                `${import.meta.env.VITE_BACKEND_URL}/api/sessions/${id}`
+                `${import.meta.env.VITE_BACKEND_URL}/api/sessions/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
             );
         } catch (e) {
-            console.error(e);
+            console.error(e.message);
         } finally {
+            localStorage.removeItem("token");
             window.location.reload();
         }
     };
 
     return (
         <aside
-            className={`fixed inset-y-0 left-0 z-50 w-72 bg-gray-900 text-white transform transition-transform duration-300 ease-out lg:translate-x-0 lg:static shadow-2xl ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                }`}
+            className={`fixed inset-y-0 left-0 z-50 w-72 bg-gray-900 text-white transform transition-transform duration-300 ease-out lg:translate-x-0 lg:static shadow-2xl ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
             <div className="h-full flex flex-col">
                 <div className="h-24 flex items-center px-8 border-b border-gray-800">
